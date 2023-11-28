@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import { config } from "dotenv";
 import userRouter from "./router/user.router.js";
 import authRouter from "./router/auth.router.js";
+import { errorMiddleware } from "./middlewares/error.middleware.js";
 config({
   path: "config.env",
 });
@@ -18,3 +19,5 @@ app.use("/api/auth", authRouter);
 app.listen(8000, () => {
   console.log(`Server is successfully running on PORT:${process.env.PORT}`);
 });
+
+app.use(errorMiddleware);
