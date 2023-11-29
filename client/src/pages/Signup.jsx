@@ -3,15 +3,29 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 const Signup = () => {
   const [formData, setFormData] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
 
   const handleSubmit = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
   };
-  console.log(formData);
+
   const submitHandler = async (e) => {
-    e.preventDefault();
-    const res = await axios.post("/api/auth/signup", formData);
-    console.log(res);
+    try {
+      e.preventDefault();
+      setError(false);
+      setErrorMsg("");
+      setIsLoading(true);
+      const { data } = await axios.post("/api/auth/signup", formData);
+      setIsLoading(false);
+    } catch (error) {
+      // console.log(error);
+      // console.log(error.response.data.message);
+      setErrorMsg(error.response.data.message);
+      setError(true);
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -42,9 +56,10 @@ const Signup = () => {
           />
           <button
             type="submit"
-            className="bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-90 disabled:opacity-80"
+            className="bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-90 disabled:opacity-80 disabled:cursor-not-allowed"
+            disabled={isLoading}
           >
-            Sign up
+            {isLoading ? "Loading..." : "Sign up"}
           </button>
         </div>
         <div className="my-3 flex gap-3">
@@ -53,6 +68,7 @@ const Signup = () => {
             <span className="text-blue-500">sign in</span>
           </Link>
         </div>
+        {error ? <p className="text-red-600 mt-2">{errorMsg}</p> : null}
       </form>
     </div>
   );
