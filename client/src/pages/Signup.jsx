@@ -7,7 +7,6 @@ const Signup = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
-
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
@@ -18,8 +17,8 @@ const Signup = () => {
     try {
       e.preventDefault();
       setError(false);
-      setErrorMsg("");
       setIsLoading(true);
+      setErrorMsg("");
       const { data } = await axios.post("/api/auth/signup", formData);
       setIsLoading(false);
       navigate("/signin");

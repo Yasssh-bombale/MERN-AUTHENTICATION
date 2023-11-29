@@ -1,13 +1,16 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-
+import {
+  signInStart,
+  signInSuccess,
+  signInFailure,
+} from "../redux/user/userSlice";
+import { useDispatch, useSelector } from "react-redux";
 const Signin = () => {
   const [formData, setFormData] = useState({});
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(false);
-  const [errorMsg, setErrorMsg] = useState("");
-
+  const { error, loading, errorMsg } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
@@ -17,18 +20,18 @@ const Signin = () => {
   const submitHandler = async (e) => {
     try {
       e.preventDefault();
-      setError(false);
-      setErrorMsg("");
-      setIsLoading(true);
+      dispatch(signInStart());
+
       const { data } = await axios.post("/api/auth/signin", formData);
-      setIsLoading(false);
+
+      dispatch(signInSuccess(data));
+
       navigate("/");
     } catch (error) {
-      // console.log(error);
       // console.log(error.response.data.message);
-      setErrorMsg(error.response.data.message);
-      setError(true);
-      setIsLoading(false);
+      // error.response.data.message
+
+      dispatch(signInFailure(error));
     }
   };
 
@@ -54,9 +57,9 @@ const Signin = () => {
           <button
             type="submit"
             className="bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-90 disabled:opacity-80 disabled:cursor-not-allowed"
-            disabled={isLoading}
+            disabled={loading}
           >
-            {isLoading ? "Loading..." : "Sign in"}
+            {loading ? "Loading..." : "Sign in"}
           </button>
         </div>
         <div className="my-3 flex gap-3">
@@ -65,7 +68,12 @@ const Signin = () => {
             <span className="text-blue-500">sign up</span>
           </Link>
         </div>
-        {error ? <p className="text-red-600 mt-2">{errorMsg}</p> : null}
+
+        {error ? (
+          <p className="text-red-600 mt-2">
+            {errorMsg.response.data.message || "Something went wrong"}{" "}
+          </p>
+        ) : null}
       </form>
     </div>
   );
