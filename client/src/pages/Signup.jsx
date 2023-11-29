@@ -1,11 +1,14 @@
 import axios from "axios";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+
 const Signup = () => {
   const [formData, setFormData] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
@@ -19,6 +22,7 @@ const Signup = () => {
       setIsLoading(true);
       const { data } = await axios.post("/api/auth/signup", formData);
       setIsLoading(false);
+      navigate("/signin");
     } catch (error) {
       // console.log(error);
       // console.log(error.response.data.message);
