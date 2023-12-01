@@ -1,21 +1,63 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useRef } from "react";
-import { getStorage, ref, uploadBytesResumable } from "firebase/storage";
+import {
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytesResumable,
+} from "firebase/storage";
 import { app } from "../firebase";
 const Profile = () => {
   const [image, setImage] = useState(undefined);
   const { currentUser } = useSelector((state) => state.user);
+  const [imagePercent, setImagePercent] = useState(0);
+  const [imageError, setImageError] = useState(false);
+  const [formData, setFormData] = useState({});
   const fileRef = useRef(null);
+  console.log(imagePercent);
+  console.log(formData);
+
   const handleFileUpload = async (image) => {
     const storage = getStorage(app);
     const fileName = new Date().getTime() + image.name;
     const storageRef = ref(storage, fileName);
-    const uploadTask = await uploadBytesResumable(storageRef, image);
-    uploadTask.on("state_changed", (snapshot) => {
-      const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-      setImagePercent(Math.round(progress));
-    });
+    const uploadTask = uploadBytesResumable(storageRef, image);
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        const progress =
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        setImagePercent(Math.round(progress));
+      },
+      (error) => {
+        setImageError(true);
+      },
+      // Note:-always keep an error function before the downloadurl function or downloadurl function means call back function must be an at very end of the functions list i got this error to many times if we put an getDowmloadURL before any function then getDownloadURL function will not going to provide any download url;
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) =>
+          setFormData({ ...formData, profilePicture: downloadURL })
+        );
+      }
+    );
+
+    // uploadTask.on(
+    //   "state_changed",
+    //   (snapshot) => {
+    //     const progress =
+    //       (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+
+    //     setImagePercent(Math.round(progress));
+    //   },
+    //   () => {
+    //     getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) =>
+    //       setFormData({ ...formData, profilePicture: downloadURL })
+    //     );
+    //   },
+    //   (error) => {
+    //     setImageError(true);
+    //   }
+    // );
   };
   useEffect(() => {
     if (image) {
