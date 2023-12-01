@@ -19,10 +19,12 @@ const Profile = () => {
   console.log(formData);
 
   const handleFileUpload = async (image) => {
+    setImageError(false);
     const storage = getStorage(app);
     const fileName = new Date().getTime() + image.name;
     const storageRef = ref(storage, fileName);
     const uploadTask = uploadBytesResumable(storageRef, image);
+
     uploadTask.on(
       "state_changed",
       (snapshot) => {
@@ -88,6 +90,20 @@ const Profile = () => {
           alt="profile"
           onClick={() => fileRef.current.click()}
         />
+        <p className="text-sm self-center">
+          {imageError ? (
+            <span className="text-red-700">
+              Error while uploading an image *(file size must be less than 2 mb)
+            </span>
+          ) : imagePercent > 0 && imagePercent < 100 ? (
+            <span>{`Uploading image : ${imagePercent} '%'`}</span>
+          ) : imagePercent === 100 ? (
+            <span className="text-green-700">Image uploaded successfully</span>
+          ) : (
+            ""
+          )}
+        </p>
+
         <input
           defaultValue={currentUser.username}
           type="text"
