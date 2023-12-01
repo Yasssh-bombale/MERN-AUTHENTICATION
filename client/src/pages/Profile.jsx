@@ -17,7 +17,8 @@ const Profile = () => {
   const fileRef = useRef(null);
   console.log(imagePercent);
   console.log(formData);
-
+  console.log(currentUser);
+  console.log(currentUser.profilePicture);
   const handleFileUpload = async (image) => {
     setImageError(false);
     const storage = getStorage(app);
@@ -84,9 +85,10 @@ const Profile = () => {
           request.resource.size < 2 * 1024 * 1024 &&
           request.resource.contentType.matches("image/.*")
         */}
+
         <img
-          className="h-26 w-26 self-center rounded-full object-cover cursor-pointer"
-          src={currentUser.profilePicture}
+          className="h-24 w-24 self-center cursor-pointer rounded-full object-cover mt-2"
+          src={formData.profilePicture || currentUser.profilePicture}
           alt="profile"
           onClick={() => fileRef.current.click()}
         />
