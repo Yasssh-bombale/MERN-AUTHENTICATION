@@ -11,8 +11,6 @@ import OAuth from "../components/OAuth";
 const Signin = () => {
   const [formData, setFormData] = useState({});
   const { error, loading, errorMsg } = useSelector((state) => state.user);
-
-  const [newErrorMsg, setNewErrorMsg] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -23,7 +21,6 @@ const Signin = () => {
   const submitHandler = async (e) => {
     try {
       e.preventDefault();
-      setNewErrorMsg("");
       dispatch(signInStart());
 
       const { data } = await axios.post("/api/auth/signin", formData);
@@ -32,9 +29,9 @@ const Signin = () => {
 
       navigate("/");
     } catch (error) {
-      console.log(error.response.data.message);
+      // console.log(error.response.data.message);
       // error.response.data.message
-      setNewErrorMsg(error.response.data.message);
+
       dispatch(signInFailure(error));
     }
   };
@@ -76,7 +73,7 @@ const Signin = () => {
 
         {error ? (
           <p className="text-red-600 mt-2">
-            {newErrorMsg || "Something went wrong"}
+            {errorMsg.response.data.message || "Something went wrong"}{" "}
           </p>
         ) : null}
       </form>
