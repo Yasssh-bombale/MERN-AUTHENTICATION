@@ -9,6 +9,12 @@ export const signup = async (req, res, next) => {
   try {
     const user = await User.findOne({ email });
     if (user) return next(ErrorHandler(401, "User already exist !"));
+    const username1 = await User.findOne({ username });
+    if (username1) {
+      return next(
+        ErrorHandler(401, "Username already exists ! Choose another one")
+      );
+    }
     await User.create({
       username,
       email,
@@ -32,7 +38,10 @@ export const signin = async (req, res, next) => {
     return res
       .cookie("token", token, { httpOnly: true, maxAge: 60 * 60 * 1000 })
       .status(201)
-      .json(rest);
+      .json({
+        message: "User signed in successfully !",
+        rest,
+      });
   } catch (error) {
     next(error);
   }

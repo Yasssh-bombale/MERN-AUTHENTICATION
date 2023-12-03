@@ -8,6 +8,7 @@ import {
 } from "../redux/user/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import OAuth from "../components/OAuth";
+import toast from "react-hot-toast";
 const Signin = () => {
   const [formData, setFormData] = useState({});
   const { error, loading, errorMsg } = useSelector((state) => state.user);
@@ -27,15 +28,34 @@ const Signin = () => {
       dispatch(signInStart());
 
       const { data } = await axios.post("/api/auth/signin", formData);
-
-      dispatch(signInSuccess(data));
+      console.log(data);
+      dispatch(signInSuccess(data.rest));
 
       navigate("/");
+      toast.success(data.message, {
+        duration: 4000,
+        icon: "😎",
+        style: {
+          background: "#333",
+          borderRadius: "10px",
+          color: "#fff",
+        },
+      });
     } catch (error) {
       console.log(error.response.data.message);
       // error.response.data.message
       setNewErrorMsg(error.response.data.message);
       dispatch(signInFailure(error));
+      toast.error(error.response.data.message, {
+        duration: 4000,
+
+        icon: "🤬",
+        style: {
+          borderRadius: "10px",
+          background: "#333",
+          color: "#fff",
+        },
+      });
     }
   };
 
@@ -50,6 +70,7 @@ const Signin = () => {
             id="email"
             className="bg-slate-100 p-3 rounded-lg"
             onChange={handleSubmit}
+            required
           />
           <input
             type="password"
@@ -57,6 +78,7 @@ const Signin = () => {
             id="password"
             className="bg-slate-100 p-3 rounded-lg"
             onChange={handleSubmit}
+            required
           />
           <button
             type="submit"

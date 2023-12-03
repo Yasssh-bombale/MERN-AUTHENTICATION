@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import OAuth from "../components/OAuth";
-
+import toast from "react-hot-toast";
 const Signup = () => {
   const [formData, setFormData] = useState({});
   const [isLoading, setIsLoading] = useState(false);
@@ -21,12 +21,33 @@ const Signup = () => {
       setIsLoading(true);
       setErrorMsg("");
       const { data } = await axios.post("/api/auth/signup", formData);
+
       setIsLoading(false);
       navigate("/signin");
+      console.log(data);
+      if (data) {
+        toast.success(data.message, {
+          duration: 4000,
+          icon: "🤩",
+          style: {
+            borderRadius: "10px",
+            background: "#333",
+            color: "#fff",
+          },
+        });
+      }
     } catch (error) {
       // console.log(error);
       // console.log(error.response.data.message);
       setErrorMsg(error.response.data.message);
+      toast.error(error.response.data.message, {
+        duration: 4000,
+        style: {
+          background: "#333",
+          borderRadius: "10px",
+          color: "#fff",
+        },
+      });
       setError(true);
       setIsLoading(false);
     }
@@ -43,6 +64,7 @@ const Signup = () => {
             id="username"
             className="bg-slate-100 p-3 rounded-lg"
             onChange={handleSubmit}
+            required
           />
           <input
             type="email"
@@ -50,6 +72,7 @@ const Signup = () => {
             id="email"
             className="bg-slate-100 p-3 rounded-lg"
             onChange={handleSubmit}
+            required
           />
           <input
             type="password"
@@ -57,6 +80,7 @@ const Signup = () => {
             id="password"
             className="bg-slate-100 p-3 rounded-lg"
             onChange={handleSubmit}
+            required
           />
           <button
             type="submit"

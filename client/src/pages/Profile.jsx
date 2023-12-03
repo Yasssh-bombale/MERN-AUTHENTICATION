@@ -19,6 +19,7 @@ import {
   deleteUserFailure,
   signOut,
 } from "../redux/user/userSlice";
+import toast from "react-hot-toast";
 
 const Profile = () => {
   const [image, setImage] = useState(undefined);
@@ -59,12 +60,27 @@ const Profile = () => {
 
       // Note:- FIXME: if we passed an empty object then we set our current user as null because in reducer function which is an updateUserSuccess() is set when ever function calls it will set an currentUser according to the action.payload but here we are passing an empty object which means we are indirectly set an our currentUser as null;😂😂it's an small bug and hence currently i'm fixing it as whenever an error arrives while post request i will consider it as an empty object and i simply show an small fancy ui which shows that you need to update something !;
       // console.log(data);
-      dispatch(updateUserSuccess(data));
+      dispatch(updateUserSuccess(data.rest));
+      toast.success(data.message, {
+        duration: 4000,
+        icon: "✌️",
+        style: {
+          background: "#333",
+          color: "#fff",
+        },
+      });
       setUpdateSuccess(true);
     } catch (error) {
       console.log(error);
       dispatch(updateUserFailure(error));
       setUpdateSuccess(false);
+      toast.error("Oops ! Something went wrong", {
+        duration: 4000,
+        style: {
+          background: "#333",
+          color: "#fff",
+        },
+      });
     }
   };
 
@@ -120,16 +136,45 @@ const Profile = () => {
         `/api/user/delete/${currentUser._id}`
       );
       dispatch(deleteUserSuccess());
+      toast.success(data.message, {
+        duration: 4000,
+        icon: "😲",
+        style: {
+          background: "#333",
+          color: "#fff",
+          borderRadius: "10px",
+        },
+      });
     } catch (error) {
       console.log(error);
       dispatch(deleteUserFailure(error));
+      toast.error("Something went wrong", {
+        duration: 4000,
+        style: {
+          background: "#333",
+          color: "#fff",
+          borderRadius: "10px",
+        },
+      });
     }
   };
 
   const handleSignOut = async () => {
     try {
       const { data } = await axios.get("/api/auth/signout");
+      console.log(data);
       dispatch(signOut());
+      if (data) {
+        toast.success(data.message, {
+          duration: 4000,
+          icon: "✌️",
+          style: {
+            borderRadius: "10px",
+            background: "#333",
+            color: "#fff",
+          },
+        });
+      }
     } catch (error) {
       console.log(error);
     }
