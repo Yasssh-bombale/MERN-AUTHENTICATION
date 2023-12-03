@@ -12,10 +12,10 @@ export const updateUser = async (req, res, next) => {
   try {
     let { username, email, profilePicture } = req.body;
     // console.log(req.body.username);
-    // console.log(username);
-    // console.log(email);
-    // console.log(profilePicture);
-    // console.log(req.body.password);
+    console.log(username);
+    console.log(email);
+    console.log(profilePicture);
+    console.log(req.body.password);
     if (req.body.password) {
       req.body.password = bcrypt.hashSync(req.body.password, 10);
     }
