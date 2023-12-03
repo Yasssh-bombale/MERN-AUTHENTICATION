@@ -165,7 +165,7 @@ const Profile = () => {
       console.log(data);
       dispatch(signOut());
       if (data) {
-        toast.success(data.message, {
+        toast.success("User sign out successfully !", {
           duration: 4000,
           icon: "✌️",
           style: {
