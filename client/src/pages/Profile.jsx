@@ -52,6 +52,7 @@ const Profile = () => {
           withCredentials: true,
         }
       );
+
       // Note:- FIXME: if we passed an empty object then we set our current user as null because in reducer function which is an updateUserSuccess() is set when ever function calls it will set an currentUser according to the action.payload but here we are passing an empty object which means we are indirectly set an our currentUser as null;lol😂😂it's an small bug and hence currently i'm fixing it as whenever an error arrives while post request i will consider it as an empty object and i simply show an small fancy ui which shows that you need to update something !;
       // console.log(data);
       dispatch(updateUserSuccess(data));
