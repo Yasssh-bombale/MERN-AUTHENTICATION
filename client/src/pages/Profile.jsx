@@ -17,8 +17,39 @@ const Profile = () => {
   const fileRef = useRef(null);
   console.log(imagePercent);
   console.log(formData);
-  console.log(currentUser);
-  console.log(currentUser.profilePicture);
+
+  const inputChnageHandler = (e) => {
+    setFormData({ ...formData, [e.target.id]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      setUpdateSuccess(false);
+      dispatch(updateUserStart());
+
+      const { data } = await axios.post(
+        `api/user/update/${currentUser._id}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
+      );
+
+      // Note:- FIXME: if we passed an empty object then we set our current user as null because in reducer function which is an updateUserSuccess() is set when ever function calls it will set an currentUser according to the action.payload but here we are passing an empty object which means we are indirectly set an our currentUser as null;lol😂😂it's an small bug and hence currently i'm fixing it as whenever an error arrives while post request i will consider it as an empty object and i simply show an small fancy ui which shows that you need to update something !;
+      // console.log(data);
+      dispatch(updateUserSuccess(data));
+      setUpdateSuccess(true);
+    } catch (error) {
+      console.log(error);
+      dispatch(updateUserFailure(error));
+      setUpdateSuccess(false);
+    }
+  };
+
   const handleFileUpload = async (image) => {
     setImageError(false);
     const storage = getStorage(app);
