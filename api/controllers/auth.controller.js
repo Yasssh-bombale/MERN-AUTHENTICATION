@@ -30,7 +30,7 @@ export const signin = async (req, res, next) => {
     const token = jwt.sign({ id: validUser._id }, process.env.JWT_SECRET_KEY);
     const { password: hashedPassword, ...rest } = validUser._doc;
     return res
-      .cookie("token", token, { httpOnly: true, maxAge: 15 * 60 * 1000 })
+      .cookie("token", token, { httpOnly: true, maxAge: 60 * 60 * 1000 })
       .status(201)
       .json(rest);
   } catch (error) {
@@ -68,7 +68,7 @@ export const google = async (req, res, next) => {
       return res
         .cookie("token", token, {
           httpOnly: true,
-          maxAge: 15 * 60 * 1000,
+          maxAge: 60 * 60 * 1000,
         })
         .status(201)
         .json(rest);

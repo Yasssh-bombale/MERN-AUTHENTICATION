@@ -14,6 +14,9 @@ import {
   updateUserStart,
   updateUserSuccess,
   updateUserFailure,
+  deleteUserStart,
+  deleteUserSuccess,
+  deleteUserFailure,
 } from "../redux/user/userSlice";
 
 const Profile = () => {
@@ -53,7 +56,7 @@ const Profile = () => {
         }
       );
 
-      // Note:- FIXME: if we passed an empty object then we set our current user as null because in reducer function which is an updateUserSuccess() is set when ever function calls it will set an currentUser according to the action.payload but here we are passing an empty object which means we are indirectly set an our currentUser as null;lol😂😂it's an small bug and hence currently i'm fixing it as whenever an error arrives while post request i will consider it as an empty object and i simply show an small fancy ui which shows that you need to update something !;
+      // Note:- FIXME: if we passed an empty object then we set our current user as null because in reducer function which is an updateUserSuccess() is set when ever function calls it will set an currentUser according to the action.payload but here we are passing an empty object which means we are indirectly set an our currentUser as null;😂😂it's an small bug and hence currently i'm fixing it as whenever an error arrives while post request i will consider it as an empty object and i simply show an small fancy ui which shows that you need to update something !;
       // console.log(data);
       dispatch(updateUserSuccess(data));
       setUpdateSuccess(true);
@@ -106,6 +109,20 @@ const Profile = () => {
     //     setImageError(true);
     //   }
     // );
+  };
+
+  // deleteAccount;
+  const handleDeleteAccount = async () => {
+    try {
+      dispatch(deleteUserStart());
+      const { data } = await axios.delete(
+        `/api/user/delete/${currentUser._id}`
+      );
+      dispatch(deleteUserSuccess());
+    } catch (error) {
+      console.log(error);
+      dispatch(deleteUserFailure(error));
+    }
   };
   useEffect(() => {
     if (image) {
@@ -179,7 +196,12 @@ const Profile = () => {
         </button>
       </form>
       <div className="flex justify-between mt-3">
-        <span className="text-red-600 cursor-pointer">Delete Account</span>
+        <span
+          onClick={handleDeleteAccount}
+          className="text-red-600 cursor-pointer"
+        >
+          Delete Account
+        </span>
         <span className="text-red-600 cursor-pointer">Sign out</span>
       </div>
       <p className="text-red-600 mt-3">
