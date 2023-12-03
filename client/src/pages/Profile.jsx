@@ -17,6 +17,7 @@ import {
   deleteUserStart,
   deleteUserSuccess,
   deleteUserFailure,
+  signOut,
 } from "../redux/user/userSlice";
 
 const Profile = () => {
@@ -124,6 +125,16 @@ const Profile = () => {
       dispatch(deleteUserFailure(error));
     }
   };
+
+  const handleSignOut = async () => {
+    try {
+      const { data } = await axios.get("/api/auth/signout");
+      dispatch(signOut());
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     if (image) {
       handleFileUpload(image);
@@ -202,7 +213,9 @@ const Profile = () => {
         >
           Delete Account
         </span>
-        <span className="text-red-600 cursor-pointer">Sign out</span>
+        <span onClick={handleSignOut} className="text-red-600 cursor-pointer">
+          Sign out
+        </span>
       </div>
       <p className="text-red-600 mt-3">
         {error && "Opps ! Something went wrong "}
