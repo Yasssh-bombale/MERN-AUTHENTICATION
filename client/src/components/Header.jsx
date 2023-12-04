@@ -5,10 +5,12 @@ const Header = () => {
   const { currentUser } = useSelector((state) => state.user);
   // console.log(currentUser.profilePicture);
   return (
-    <div className="bg-slate-200 p-4 box-border">
+    <div className="bg-slate-200 p-4 box-border md:p-4">
       <div className="max-w-6xl flex justify-between items-center mx-auto ">
         <Link to={"/"}>
-          <h1 className="font-bold text-xl">MERN Authentication</h1>
+          <h1 className="font-bold text-[16px] md:text-xl">
+            MERN Authentication
+          </h1>
         </Link>
         <ul className="flex gap-4 items-center">
           <Link to={"/"}>

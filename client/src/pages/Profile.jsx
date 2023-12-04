@@ -186,7 +186,9 @@ const Profile = () => {
     }
   }, [image]);
   return (
-    <div className=" max-w-lg mx-auto gap-2 ">
+    // w-[90%] md:w-[40%] mx-auto
+    //  max-w-lg mx-auto
+    <div className="w-[90%] md:w-[40%] mx-auto gap-2 ">
       <h1 className="text-center text-3xl font-semibold mt-4">Profile</h1>
 
       <form onSubmit={handleSubmit} className="flex flex-col  mt-4 gap-4 ">

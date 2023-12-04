@@ -54,10 +54,11 @@ const Signup = () => {
   };
 
   return (
-    <div className="max-w-lg mx-auto">
+    // max-w-sm md:max-w-lg mx-auto
+    <div className="w-[90%] md:w-[40%] mx-auto">
       <h1 className="text-3xl  text-center my-7">Sign Up</h1>
       <form onSubmit={submitHandler}>
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-3 ">
           <input
             type="text"
             placeholder="username"
